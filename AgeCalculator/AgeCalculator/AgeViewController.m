@@ -26,6 +26,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [_birthdatePicker setDate:[NSDate date]];
+    [_birthdatePicker setMaximumDate:[NSDate date]];
+
     
     // 1. Setting the labels to "empty" so that they don't display the placeholder data from the storyboard.
     self.currentDateLabel.text = @"";
