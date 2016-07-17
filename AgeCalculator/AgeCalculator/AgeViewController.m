@@ -26,8 +26,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [_birthdatePicker setDate:[NSDate date]];
-    [_birthdatePicker setMaximumDate:[NSDate date]];
+    [self.birthdatePicker setDate:[NSDate date]];
+   // [self.birthdatePicker setMaximumDate:[NSDate date]];
 
     
     // 1. Setting the labels to "empty" so that they don't display the placeholder data from the storyboard.
@@ -139,22 +139,66 @@
 {
     // This determines which calendar we're using. Could be Gregorian (the one we use), or another one, e.g. the Buddhist or Jewish calendars.
     NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSLog(@"Your birthdate is: %@",birthdate);
     
     // This will pull the birthdate object apart into year, month, and day components. This lets us use/manipulate those pieces individually.
     NSDateComponents *birthdateComponents = [calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitCalendar fromDate:birthdate];
     
     // This uses today's date and simply pulls the year out as a number.
     NSInteger currentYear = [calendar component:NSCalendarUnitYear fromDate:[NSDate date]];
+  //  NSLog(@"currentYear is %ld", (long)currentYear);
     
     // 11. This should change the year of the birthdate components object to this year. We're trying to determine what the user's birthday is for the current year.
     [birthdateComponents setYear:currentYear]; //Maybe WRONG??
     
     // 12. This should convert the birthdateComponents object back into a regular NSDate object (search for NSDateComponents docs and look in the sidebar under tasks. There should be a mention of accessing the date).
     NSDate *currentYearBirthday = [calendar dateFromComponents: birthdateComponents]; // Really Guessing HERE!
+    NSLog(@"currentYearBirthday is %ld", (long)currentYearBirthday);
+     NSDate *today = [NSDate date];
+    NSLog(@"today is %@", today);
+
+    
     
     // The above NSDate object represents the user's birthday for this year. We now need to add 1 year to it to determine the user's next birthday. The following object is a dateComponents object that only has its month property set. It represents 12 months of time.
     NSDateComponents *oneYear = [[NSDateComponents alloc] init];
-    [oneYear setMonth:12];
+    
+       // [oneYear setMonth:12];
+    switch ([currentYearBirthday compare:today]) {
+        case NSOrderedAscending:
+            //Do your logic when date1 > date2
+            [oneYear setMonth:12];
+            break;
+            
+        case NSOrderedDescending:
+            //Do your logic when date1 < date2
+            [oneYear setMonth:0];
+            break;
+            
+        case NSOrderedSame:
+            //Do your logic when date1 = date2
+            [oneYear setMonth:0];
+            break;
+    }
+    
+/*
+    if ([currentYearBirthday compare:today] == NSOrderedDescending) {
+        NSLog(@"date1 is later than date2");
+         [oneYear setMonth:12];
+    } else if ([today compare:currentYearBirthday] == NSOrderedAscending) {
+        NSLog(@"date1 is earlier than date2");
+        [oneYear setMonth:12];
+    } else {
+        NSLog(@"dates are the same");
+        [oneYear setMonth:0];
+    }
+ */
+
+//    if (today > currentYearBirthday) {
+//        //
+//    } else  {
+//        [oneYear setMonth:0];
+//    }
+    //[oneYear setMonth:12];
     
     // 13. We can use the above "oneYear" object and add it to "currentYearBirthday" to determine the user's next birthday.
     NSDate *nextBirthday = [calendar dateByAddingComponents:oneYear toDate:currentYearBirthday options:0]; // TRYING TO USE VARIABLES CREATED ABOVE. MAKES SENSE
